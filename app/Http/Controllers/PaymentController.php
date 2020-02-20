@@ -55,25 +55,32 @@ class PaymentController extends Controller
         if(Auth::check()){
             $this->validate($request, [
                 'STUDENTID' => 'required',
-                'MONTH' => 'required',
-                'AMOUNT' => 'required'
+                'MONTH' => 'required'
+                
             ]);
             //student find by id
-            $s = Student::find($request->input('STUDENTID'));
-            
-        // Create PAYMENT
-        $p = new Payment;
-        $p->STUDENTID = $request->input('STUDENTID');
-        $p->STUDENTNAME = $s->NAME;
-        $p->MONTH = $request->input('MONTH'); 
-        $p->AMOUNT = $request->input('AMOUNT');   
-        $p->CREATED_DATETIME = date("Y-m-d H:i:s");
-        $p->CREATED_BY =  'ID: '.auth()->user()->id.', NAME: '.auth()->user()->name;
-        $p->UPDATED_DATETIME = 'NOT UPDATED';
-        $p->UPDATED_BY = 'NOT UPDATED';    
-        $p->save();
+         $s = Student::find($request->input('STUDENTID'));
+            //check if exist payment
+            $isPaid = Payment::where('STUDENTID',$request->input('STUDENTID'))->where('MONTH',$request->input('MONTH'));
+            if($isPaid->count() > 0){
+                $student = Student::orderBy('NAME')->get();
+            return view('payment.create',compact('student'))->with('errormsg',Payment::find($request->input('STUDENTID'))->find($request->input('MONTH')));
+            }else{
+                            // Create PAYMENT
+                $p = new Payment;
+                $p->STUDENTID = $request->input('STUDENTID');
+                $p->STUDENTNAME = $s->NAME;
+                $p->MONTH = $request->input('MONTH'); 
+                $p->AMOUNT = $s->AMOUNT;   
+                $p->CREATED_DATETIME = date("Y-m-d H:i:s");
+                $p->CREATED_BY =  'ID: '.auth()->user()->id.', NAME: '.auth()->user()->name;
+                $p->UPDATED_DATETIME = 'NOT UPDATED';
+                $p->UPDATED_BY = 'NOT UPDATED';    
+                $p->save();
 
-        return redirect('/payment')->with('success', 'Post Created');
+                return redirect('/payment')->with('success', 'Post Created');
+            }
+      
         }else{
             return redirect()->route('login');      
         }

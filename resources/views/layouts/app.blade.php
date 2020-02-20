@@ -21,6 +21,13 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- for data tables -->
+
+
+  
+
+
+
 </head>
 <body>
     <div id="app">
@@ -52,7 +59,9 @@
                                 </li>
                             @endif
                         @else
-                        <li> <a class="nav-link" href="/student">Student</a></li>
+                        <li>
+                        <a class="nav-link" href="/payment">Payment</a></li> 
+                        <a class="nav-link" href="/student">Student</a></li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>

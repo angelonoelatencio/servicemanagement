@@ -18,7 +18,9 @@ class StudentController extends Controller
         {
             $student = Student::all();
             return view('student.index')->with('student',$student);
-        } 
+        }else{          
+            return redirect()->route('login');     
+        }
     }
 
     /**
@@ -28,7 +30,11 @@ class StudentController extends Controller
      */
     public function create()
     {
-        return view('student.create');
+        if(Auth::check()){
+            return view('student.create');
+        }else{
+            return redirect()->route('login');      
+        }      
     }
 
     /**
@@ -39,30 +45,30 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'NAME' => 'required',
-            'ADDRESS' => 'required',
-            'AMOUNT' => 'required'
-        ]);
-
-        // Handle File Upload
-        
-
-        // Create Post
+        if(Auth::check()){
+            $this->validate($request, [
+                'NAME' => 'required',
+                'ADDRESS' => 'required',
+                'AMOUNT' => 'required'
+            ]);
+            
+        // Create Student
         $s = new Student;
         $s->NAME = $request->input('NAME');
         $s->ADDRESS = $request->input('ADDRESS');
         $s->AMOUNT = $request->input('AMOUNT');
-        $s->CREATED_DATETIME = 'test';
+        $s->CREATED_DATETIME = date("Y-m-d H:i:s");
         $s->CREATED_BY =  'ID: '.auth()->user()->id.', NAME: '.auth()->user()->name;
-        $s->UPDATED_DATETIME = 'test';
-        $s->UPDATED_BY = 'test';
+        $s->UPDATED_DATETIME = 'NOT UPDATED';
+        $s->UPDATED_BY = 'NOT UPDATED';
         
       
         $s->save();
 
         return redirect('/student')->with('success', 'Post Created');
-   
+        }else{
+            return redirect()->route('login');      
+        }
     }
 
     /**
@@ -73,7 +79,12 @@ class StudentController extends Controller
      */
     public function show(student $student)
     {
-        return view('student.show',compact('student'));
+       // return view('student.show',compact('student'));
+       if(Auth::check()){           
+            return redirect('/student');
+        }else{
+            return redirect()->route('login');      
+        }
     }
 
     /**
@@ -84,7 +95,11 @@ class StudentController extends Controller
      */
     public function edit(student $student)
     {
-        return view('student.edit',compact('student'));
+        if(Auth::check()){           
+            return view('student.edit',compact('student'));
+        }else{
+            return redirect()->route('login');      
+        }   
     }
 
     /**
@@ -96,22 +111,29 @@ class StudentController extends Controller
      */
     public function update(Request $request, student $student)
     {
-        $this->validate($request, [
-            'NAME' => 'required',
-            'ADDRESS' => 'required',
-            'AMOUNT' => 'required'
-        ]);
-		$s = Student::find($student->id);
+        if(Auth::check()){           
+            $this->validate($request, [
+                'NAME' => 'required',
+                'ADDRESS' => 'required',
+                'AMOUNT' => 'required'
+            ]);
+            $s = Student::find($student->id);
+           
+    
+            // Update Post
+            $s->NAME = $request->input('NAME');
+            $s->ADDRESS = $request->input('ADDRESS');
+            $s->AMOUNT = $request->input('AMOUNT');
+            $s->UPDATED_DATETIME = date("Y-m-d H:i:s");
+            $s->UPDATED_BY = 'ID: '.auth()->user()->id.', NAME: '.auth()->user()->name;
+            
+            $s->save();
+    
+            return redirect('/student')->with('success', 'Post Updated');
+        }else{
+            return redirect()->route('login');      
+        }   
        
-
-        // Update Post
-        $s->NAME = $request->input('NAME');
-        $s->ADDRESS = $request->input('ADDRESS');
-        $s->AMOUNT = $request->input('AMOUNT');
-        
-        $s->save();
-
-        return redirect('/student')->with('success', 'Post Updated');
     }
 
     /**
@@ -122,9 +144,14 @@ class StudentController extends Controller
      */
     public function destroy(student $student)
     {
-        $student->delete();
+        if(Auth::check()){           
+            $student->delete();
   
-        return redirect()->route('student.index')
-                        ->with('success','Student deleted successfully');
+            return redirect()->route('student.index')
+                            ->with('success','Student deleted successfully');
+        }else{
+            return redirect()->route('login');      
+        }   
+       
     }
 }

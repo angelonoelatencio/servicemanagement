@@ -18,7 +18,7 @@
                     <tr>
                         <td>{{date('M d, yy',strtotime($s->CREATED_DATETIME))}}</td>
                         <td>{{strtoupper($s->STUDENTNAME)}}</td>
-                        <td>{{strtoupper(date('F', mktime(0, 0, 0, $s->MONTH, 10)))}}</td>
+                        <td>{{strtoupper($s->MONTH)}}</td>
                         <td>PHP {{$s->AMOUNT}}</td>
                     </tr>
                 @endforeach

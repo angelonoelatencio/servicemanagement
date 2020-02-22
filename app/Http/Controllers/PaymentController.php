@@ -19,10 +19,6 @@ class PaymentController extends Controller
         if(Auth::check())
         {
             $payment = Payment::all();
-
-
-            
-           
             return view('payment.index')->with('payment',$payment);
         }else{          
             return redirect()->route('login');     
@@ -86,6 +82,26 @@ class PaymentController extends Controller
         }
     }
 
+    public function showPaymentDetails(Request $request){
+        if(Auth::check()){
+            $this->validate($request, [
+                'STUDENTID' => 'required'            
+            ]);
+            $StudentInfo = Student::where('id',$request->input('STUDENTID'))->first();
+            $PaymentDetails = Payment::where('STUDENTID',$request->input('STUDENTID'))->get();
+            $ListMonth = collect(["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"]);
+            $UnPaidMonth = collect([]);
+            foreach ($ListMonth as $m){ 
+                    if(!$PaymentDetails->contains('MONTH',$m)){
+                        $UnPaidMonth->push($m);
+                    }
+                }
+
+            return view('payment.showPaymentDetails',compact('UnPaidMonth'),compact('StudentInfo'));
+        }else{
+            return redirect()->route('login');     
+        }
+    }
     /**
      * Display the specified resource.
      *
@@ -94,8 +110,10 @@ class PaymentController extends Controller
      */
     public function show(Payment $payment)
     {
-        //
+        
     }
+
+    
 
     /**
      * Show the form for editing the specified resource.

@@ -74,7 +74,7 @@ class PaymentController extends Controller
                 $p->UPDATED_BY = 'NOT UPDATED';    
                 $p->save();
 
-                return redirect('/payment')->with('success', 'Post Created');
+                return redirect('/listpaid')->with('success', 'Post Created');
             }
       
         }else{
@@ -111,6 +111,22 @@ class PaymentController extends Controller
     public function show(Payment $payment)
     {
         
+    }
+
+    public function selectPaidStudent(){
+
+            $payment = Payment::all()->sortByDesc('CREATED_DATETIME');
+            // $payment = $payment->sortBy('CREATED_DATETIME');
+             $payment = $payment->unique('STUDENTID');
+            $payment->values()->all();
+            $payment = $payment->sortBy('CREATED_DATETIME');
+
+            foreach ($payment as $p){
+                $p->MONTH = Payment::where('STUDENTID',$p->STUDENTID)->count();
+                $p->CREATED_DATETIME = date('M d, yy h:i A',strtotime($p->CREATED_DATETIME));
+            }
+            return view('payment.paidlist')->with('payment',$payment);
+  
     }
 
     

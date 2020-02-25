@@ -27,7 +27,7 @@
         </div>
         {{ Form::hidden('STUDENTID', $StudentInfo->id) }}
         {{Form::submit('Add Payment', ['class'=>'btn btn-primary'])}}
-        
+        <a href='/payment/create' class='btn btn-dark'>Back</a>
 
     {!! Form::close() !!}
 <div>

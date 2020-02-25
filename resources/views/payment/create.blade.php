@@ -21,7 +21,7 @@
             {{Form::number('AMOUNT', $item->AMOUNT, ['class' => 'form-control', 'placeholder' => '0,000.00'])}}
         </div> -->
         {{Form::submit('Next', ['class'=>'btn btn-primary'])}}
-       
+        <a href='/listpaid' class='btn btn-dark'>Back</a>
 
     {!! Form::close() !!}
 <div>

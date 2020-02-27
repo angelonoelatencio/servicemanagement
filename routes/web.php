@@ -22,3 +22,5 @@ Route::resource('student','StudentController');
 Route::resource('payment','PaymentController');
 Route::get('showPaymentDetails', 'PaymentController@showPaymentDetails');
 Route::get('listpaid', 'PaymentController@selectPaidStudent');
+Route::get('MonthPaid', 'PaymentController@getPaidMonth');
+

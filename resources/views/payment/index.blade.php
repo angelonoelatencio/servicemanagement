@@ -28,7 +28,7 @@
         
     @else
         <div class="col-md-12">
-        <h1>Student List</h1>
+        <h1>List of Paid Student</h1>
         <a type="button" class="btn btn-success" href="/payment/create">Pay Now</a>
             <table class="table table-bordered table-hover" id="table">
                 <tr>

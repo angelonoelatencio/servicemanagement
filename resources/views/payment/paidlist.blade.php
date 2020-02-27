@@ -1,21 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
-   
+    @if(session('success'))
+    <script>
+    Swal.fire(
+    'Payment Added!',
+    '{{session('success')}}',
+    'success'
+    )
+    </script>
+    @endif
     @if(count($payment) > 0)
     <div class="col-md-12">
-    <h1>List of Paid Student</h1>
-    <a type="button" class="btn btn-success" href="/payment/create">Pay Now</a>
+ 
+    <div class="form-group">
+        <h1>List of Paid Student</h1>
+        <a type="button" class="btn btn-success" href="/payment/create">Pay Now</a>
+    </div>
+    <div class="form-group">
     <table class="table table-bordered table-hover" id="table">
             <tr>
+                <th>Account Number</th>
                 <th>Last Payment Date</th>
                 <th>Student Name</th>
-                <th>List of Month Paid</th>
+                <th>Completed Month Paid</th>
                 <th>Amount Paid</th>
             </tr>
             
                 @foreach($payment as $s)
                     <tr>
+                        <td>{{$s->STUD_ACC}}</td>
                         <td>{{$s->CREATED_DATETIME}}</td>
                         <td>{{strtoupper($s->STUDENTNAME)}}</td>
                         <td>{{strtoupper($s->MONTH)}}</td>
@@ -24,6 +38,7 @@
                 @endforeach
           
         </table>
+    </div>
     </div>
         
     @else
@@ -47,13 +62,9 @@
     
 
    
-<script>
 
 
-        $(document).ready( function () {
-    $('#table').DataTable();
-} );
-         </script>
+
 @endsection
 
 

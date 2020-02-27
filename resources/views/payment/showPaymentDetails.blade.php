@@ -18,16 +18,26 @@
             {!! Form::text('AMOUNT','PHP '.$StudentInfo->AMOUNT,['class' => 'form-control','disabled' => 'disabled']) !!}
         </div>
         <div class="form-group">
-            {{Form::label('Select Month', 'Select Month')}}        
-            <select class="form-control" name="MONTH">
-                @foreach($UnPaidMonth as $item)
-                        <option value="{{$item}}">{{$item}}</option>      
-                @endforeach
-            </select>
+            {{Form::label('Select Month', 'Select Month')}}
+            @if ($UnPaidMonth->isEmpty())
+                {!! Form::text('','ALL MONTH PAID',['class' => 'form-control','disabled' => 'disabled']) !!}
+            @else
+                <select class="form-control" name="MONTH">
+                    @foreach($UnPaidMonth as $item)
+                            <option value="{{$item}}">{{$item}}</option>      
+                    @endforeach
+                </select>
+            @endif        
+
         </div>
-        {{ Form::hidden('STUDENTID', $StudentInfo->id) }}
-        {{Form::submit('Add Payment', ['class'=>'btn btn-primary'])}}
-        <a href='/payment/create' class='btn btn-dark'>Back</a>
+            @if ($UnPaidMonth->isEmpty())
+                 <a href='/payment/create' class='btn btn-dark'>Back</a>
+            @else
+                {{ Form::hidden('STUDENTID', $StudentInfo->id) }}
+                {{Form::submit('Add Payment', ['class'=>'btn btn-primary'])}}
+                <a href='/payment/create' class='btn btn-dark'>Back</a>
+            @endif     
+       
 
     {!! Form::close() !!}
 <div>

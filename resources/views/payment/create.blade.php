@@ -25,11 +25,5 @@
 
     {!! Form::close() !!}
 <div>
-@if(!empty($errormsg))
-    
-   <script>
-   
-   Swal.fire({icon: 'info',title: 'Already Paid',html: 'Student Name: {{strtoupper($errormsg->STUDENTNAME)}} <br>' + 'Payment Date: {{date('M d, yy',strtotime($errormsg->CREATED_DATETIME))}}'})
-   </script>
-@endif
+
 @endsection

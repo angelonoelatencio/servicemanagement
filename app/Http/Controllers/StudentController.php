@@ -61,11 +61,12 @@ class StudentController extends Controller
         $s->CREATED_BY =  'ID: '.auth()->user()->id.', NAME: '.auth()->user()->name;
         $s->UPDATED_DATETIME = 'NOT UPDATED';
         $s->UPDATED_BY = 'NOT UPDATED';
+        $s->accnum = rand();
         
       
         $s->save();
 
-        return redirect('/student')->with('success', 'Post Created');
+        return redirect('/student')->with('success', 'Student Created Successfully');
         }else{
             return redirect()->route('login');      
         }

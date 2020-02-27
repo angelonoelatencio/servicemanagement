@@ -21,5 +21,13 @@
 
     {!! Form::close() !!}
 <div>
-   
+@if(session('error'))
+<script>
+ Swal.fire(
+  'No Student Found',
+  '{{session('error')}}',
+  'info'
+)
+</script>
+@endif
 @endsection

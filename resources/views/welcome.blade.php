@@ -62,6 +62,31 @@
                 margin-bottom: 30px;
             }
         </style>
+            <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{{ config('app.name', 'Laravel') }}</title>
+
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}" defer></script>
+
+    <!-- Fonts -->
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+
+    <!-- Styles -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- for data tables -->
+
+
+  
+
     </head>
     <body>
         <div class="flex-center position-ref full-height">
@@ -81,20 +106,25 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
+                    View Paid Month
                 </div>
 
-                <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://vapor.laravel.com">Vapor</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
+                {!! Form::open(['action' => 'PaymentController@getPaidMonth', 'method' => 'GET', 'enctype' => 'multipart/form-data']) !!}
+                    <div class="form-group">
+                        {{Form::number('acc', '', ['class' => 'form-control', 'placeholder' => 'ACCOUNT NUMBER'])}}
+                    </div>
+                    {{Form::submit('Next', ['class'=>'btn btn-primary'])}}
+                {!! Form::close() !!}
             </div>
         </div>
+        @if(session('noRecord'))
+    <script>
+    Swal.fire(
+    '{{session('noRecord')}}',
+    'Check your Account Number',
+    'info'
+    )
+    </script>
+    @endif
     </body>
 </html>

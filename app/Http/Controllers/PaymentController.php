@@ -34,7 +34,12 @@ class PaymentController extends Controller
     {
         if(Auth::check()){
             $student = Student::orderBy('NAME')->get();
-            return view('payment.create',compact('student'));
+            if($student->isEmpty())
+            {
+                return redirect('student/create')->with('error','YOU MUST CREATE STUDENT FIRST!');
+            }else{
+                return view('payment.create',compact('student'));
+            }
         }else{
             return redirect()->route('login');      
         }  
@@ -57,14 +62,13 @@ class PaymentController extends Controller
             //student find by id
          $s = Student::find($request->input('STUDENTID'));
             //check if exist payment
-            $isPaid = Payment::where('STUDENTID',$request->input('STUDENTID'))->where('MONTH',$request->input('MONTH'));
-            if($isPaid->count() > 0){
-                $student = Student::orderBy('NAME')->get();
-            return view('payment.create',compact('student'))->with('errormsg',Payment::find($request->input('STUDENTID'))->find($request->input('MONTH')));
-            }else{
+        
                             // Create PAYMENT
                 $p = new Payment;
                 $p->STUDENTID = $request->input('STUDENTID');
+                  $acc = Student::where('id',$request->input('STUDENTID'))->first();
+               
+                $p->STUD_ACC =  $acc->accnum; 
                 $p->STUDENTNAME = $s->NAME;
                 $p->MONTH = $request->input('MONTH'); 
                 $p->AMOUNT = $s->AMOUNT;   
@@ -74,8 +78,11 @@ class PaymentController extends Controller
                 $p->UPDATED_BY = 'NOT UPDATED';    
                 $p->save();
 
-                return redirect('/listpaid')->with('success', 'Post Created');
-            }
+                //GET ACCOUNT NUMBER
+                $GETACC = Student::where('id',$request->input('STUDENTID'))->first();
+
+                return redirect('/listpaid')->with('success', 'Account Number: '.$GETACC->accnum);
+            
       
         }else{
             return redirect()->route('login');      
@@ -102,6 +109,20 @@ class PaymentController extends Controller
             return redirect()->route('login');     
         }
     }
+
+    public function getPaidMonth(Request $request){
+        $this->validate($request, [
+            'acc' => 'required'            
+        ]);
+
+        $paid = Payment::where('STUD_ACC',$request->input('acc'))->get();
+        $StudentInfo = Student::where('accnum',$request->input('acc'))->first();
+            if($paid->isEmpty()){
+                return redirect('/')->with('noRecord','NO RECORD FOUND!');
+            }else{
+                return view('payment.getPaid',compact('StudentInfo'))->with('paid',$paid);
+            }
+    }
     /**
      * Display the specified resource.
      *
@@ -116,13 +137,15 @@ class PaymentController extends Controller
     public function selectPaidStudent(){
 
             $payment = Payment::all()->sortByDesc('CREATED_DATETIME');
-            // $payment = $payment->sortBy('CREATED_DATETIME');
+
              $payment = $payment->unique('STUDENTID');
             $payment->values()->all();
             $payment = $payment->sortBy('CREATED_DATETIME');
 
             foreach ($payment as $p){
                 $p->MONTH = Payment::where('STUDENTID',$p->STUDENTID)->count();
+                // $acc = Student::where('id', $p->STUDENTID)->first();
+                // $p->STUDENTID = $acc->accnum;               
                 $p->CREATED_DATETIME = date('M d, yy h:i A',strtotime($p->CREATED_DATETIME));
             }
             return view('payment.paidlist')->with('payment',$payment);

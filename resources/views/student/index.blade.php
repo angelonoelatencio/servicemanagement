@@ -21,10 +21,13 @@
                         <td>PHP {{$s->AMOUNT}}</td>
                         <td>
                         <a href='/student/{{$s->id}}/edit' class='btn btn-warning'>Update</a> 
-                        {!!Form::open(['action' => ['StudentController@destroy', $s->id], 'method' => 'POST', 'class' => 'pull-right','id' => 'confirm_delete'])!!}
-                        {{Form::hidden('_method', 'DELETE')}}
-                        {{Form::submit('Delete', ['class' => 'btn btn-danger'])}}
-                        {!!Form::close()!!}
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                            
+                                {!!Form::open(['action' => ['StudentController@destroy', $s->id], 'method' => 'POST', 'class' => 'pull-right','id' => 'confirm_delete'])!!}
+                                {{Form::hidden('_method', 'DELETE')}}
+                                {{Form::submit('Delete', ['class' => 'btn btn-danger'])}}
+                                {!!Form::close()!!}
+                            </div>
                         </td>
                     </tr>
                 @endforeach
@@ -82,6 +85,15 @@
         });
     });
 </script>
+@if(session('success'))
+    <script>
+    Swal.fire(
+    'Student Added!',
+    '{{session('success')}}',
+    'success'
+    )
+    </script>
+    @endif
 @endsection
 
 
